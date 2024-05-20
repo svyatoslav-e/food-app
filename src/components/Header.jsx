@@ -6,8 +6,10 @@ export default function Header() {
       <div id="title">
         <img src={Logo} alt="Food Order Logo" />
         <h1>Food Order 💪</h1>
-        <button>CART</button>
       </div>
+      <nav>
+        <button>CART (0)</button>
+      </nav>
     </header>
   );
 }

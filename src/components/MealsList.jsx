@@ -1,6 +1,9 @@
 import { useFetch } from "../hooks/useFetch";
 import { fetchMeals } from "../api";
 
+// Path: src/components/MealItem.jsx
+import MealItem from "./MealItem";
+
 export default function MealsList() {
   const { data, error, loading } = useFetch({
     fetchFn: fetchMeals,
@@ -18,18 +21,7 @@ export default function MealsList() {
       {data.length > 0 && (
         <ul id="meals">
           {data.map((meal) => (
-            <li key={meal.id} className="meal-item">
-                <h3>{meal.name}</h3>
-                <img
-                  src={`http://localhost:3000/${meal.image}`}
-                  alt={meal.name}
-                />
-                <p className="meal-item-description">{meal.description}</p>
-                <p className="meal-item-price">Price: ${meal.price}</p>
-                <div className="meal-item-actions">
-                  <button>+</button>
-                </div>
-            </li>
+            <MealItem key={meal.id} {...meal} />
           ))}
         </ul>
       )}
