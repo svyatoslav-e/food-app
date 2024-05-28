@@ -25,6 +25,10 @@ export default function useHttp(url, config, initialValue = null) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    function clearData() {
+        setData(initialValue);
+    }
+
     /**
      * Sends an HTTP request using the provided URL and config.
      */
@@ -50,6 +54,7 @@ export default function useHttp(url, config, initialValue = null) {
         data,
         error,
         loading,
-        sendRequest
+        sendRequest,
+        clearData
     };
 }
