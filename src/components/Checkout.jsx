@@ -47,18 +47,23 @@ export default function Checkout() {
     });
   }
 
+  function handleFinishCheckout() {
+    cartCtx.clearCart();
+    userProgressCtx.hideCheckout();
+  }
+
   if (data && !error) {
     return ( 
       <Modal
         className="checkout"
         open={userProgressCtx.progress === "checkout"}
-        onClose={handleCloseCheckout}
+        onClose={handleFinishCheckout}
       >
         <h2>Order Submitted</h2>
         <p>Your order was submitted successully</p>
         <p>We will get back to you with more details via email within the next few minutes</p>
         <div className="modal-actions">
-          <Button onClick={handleCloseCheckout}>Ok</Button>
+          <Button onClick={handleFinishCheckout}>Ok</Button>
         </div>
       </Modal>
     );
