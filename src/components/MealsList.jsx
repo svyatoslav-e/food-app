@@ -1,22 +1,22 @@
-import { useFetch } from "../hooks/useFetch";
-import { fetchMeals } from "../api";
-
-// Path: src/components/MealItem.jsx
+import useHttp from "../hooks/useHttp";
 import MealItem from "./MealItem";
+import Error from "./UI/Error";
+
+const requestConfig = {};
 
 export default function MealsList() {
-  const { data, error, loading } = useFetch({
-    fetchFn: fetchMeals,
-    initialValue: [],
-  });
+  const { data, error, loading } = useHttp('http://localhost:3000/meals', requestConfig, []);
+
+  console.log(data, error, loading);
+
 
   if (error) {
-    return <p>An error occured</p>;
+    return <Error title='An error occured' message={error} />;
   }
 
   return (
     <section>
-      {loading && <p>Loading...</p>}
+      {loading && <p className="center">Loading...</p>}
       {!loading && data.length === 0 && <p>No meals available</p>}
       {data.length > 0 && (
         <ul id="meals">
