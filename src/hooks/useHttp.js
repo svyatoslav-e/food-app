@@ -28,10 +28,11 @@ export default function useHttp(url, config, initialValue = null) {
     /**
      * Sends an HTTP request using the provided URL and config.
      */
-    const sendRequest = useCallback(async function sendRequest() {
+    const sendRequest = useCallback(async function sendRequest(dataBody) {
         setLoading(true);
         try {
-            const data = await sendHTTPRequest(url, config);
+            const data = await sendHTTPRequest(url, {...config, body: JSON.stringify(dataBody)});
+            console.log(data)
             setData(data);
         } catch (error) {
             setError(error.message || 'An error occurred');

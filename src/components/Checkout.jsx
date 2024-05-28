@@ -2,9 +2,18 @@ import { useContext } from "react";
 import { CartContext } from "../contexts/cartContext";
 import { UserProgressContext } from "../contexts/userProgressContext";
 import { currencyFormatter } from "../util/formatting";
+import useHttp from "../hooks/useHttp";
 import Modal from "./UI/Modal";
 import Input from "./UI/Input";
 import Button from "./UI/Button";
+import Error from "./UI/Error";
+
+const requestConfig = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+};
 
 export default function Checkout() {
   const cartCtx = useContext(CartContext);
@@ -13,6 +22,13 @@ export default function Checkout() {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+
+  const {
+    data,
+    error,
+    loading: isSending,
+    sendRequest,
+  } = useHttp("http://localhost:3000/orders", requestConfig);
 
   function handleCloseCheckout() {
     userProgressCtx.hideCheckout();
@@ -23,7 +39,29 @@ export default function Checkout() {
     const fd = new FormData(event.target);
     const customerData = Object.fromEntries(fd.entries());
 
+    sendRequest({
+      order: {
+        customer: customerData,
+        items: cartCtx.items,
+      },
+    });
+  }
 
+  if (data && !error) {
+    return ( 
+      <Modal
+        className="checkout"
+        open={userProgressCtx.progress === "checkout"}
+        onClose={handleCloseCheckout}
+      >
+        <h2>Order Submitted</h2>
+        <p>Your order was submitted successully</p>
+        <p>We will get back to you with more details via email within the next few minutes</p>
+        <div className="modal-actions">
+          <Button onClick={handleCloseCheckout}>Ok</Button>
+        </div>
+      </Modal>
+    );
   }
 
   return (
@@ -43,12 +81,18 @@ export default function Checkout() {
           <Input label="Postal Code" id="postal-code" type="text" />
         </div>
 
-        <p className="modal-actions">
-          <Button type="button" textOnly onClick={handleCloseCheckout}>
-            Cancel
-          </Button>
-          <Button>Submit Order</Button>
-        </p>
+        <div className="modal-actions">
+          {isSending && <p>Sending order data...</p>}
+          {!isSending && (
+            <>
+              <Button type="button" textOnly onClick={handleCloseCheckout}>
+                Cancel
+              </Button>
+              <Button>Submit Order</Button>
+            </>
+          )}
+        </div>
+        {error && <Error title="Error to submit order" message={error} />}
       </form>
     </Modal>
   );

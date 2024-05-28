@@ -7,8 +7,6 @@ const requestConfig = {};
 export default function MealsList() {
   const { data, error, loading } = useHttp('http://localhost:3000/meals', requestConfig, []);
 
-  console.log(data, error, loading);
-
 
   if (error) {
     return <Error title='An error occured' message={error} />;
