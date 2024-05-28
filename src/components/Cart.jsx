@@ -27,10 +27,14 @@ const Cart = () => {
 
   function handleDecreaseQty(item) {
     cartCtx.removeFromCart(item.id);
-  } 
+  }
 
   return (
-    <Modal className="cart" open={userProgressCtx.progress === "cart"}>
+    <Modal
+      className="cart"
+      open={userProgressCtx.progress === "cart"}
+      onClose={userProgressCtx.progress === "cart" ? handleCloseCart : null}
+    >
       <h2>Your Cart</h2>
       <ul>
         {cartCtx.items.map((item) => (
@@ -47,10 +51,12 @@ const Cart = () => {
         <Button textOnly onClick={handleCloseCart}>
           Close
         </Button>
-        <Button onClick={handleCheckout}>Checkout</Button>
+        {cartCtx.items.length > 0 && (
+          <Button onClick={handleCheckout}>Checkout</Button>
+        )}
       </p>
     </Modal>
   );
-}; 
+};
 
 export default Cart;
